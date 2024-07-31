@@ -3,34 +3,39 @@
 namespace App\Controller;
 
 use App\Entity\Badge;
+use App\Repository\BadgeRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiBadgeController extends AbstractController
 {
-    #[Route('/api/badges', name: 'getBadges', methods: ['GET'])]
-    public function getBadges(EntityManagerInterface $em): JsonResponse
+    private $security;
+
+    public function __construct(Security $security, BadgeRepository $badgeRepository)
     {
-        $badges = $em->getRepository(Badge::class)->findAll();
+        $this->security = $security;
+    }
 
-        $data = [];
-        foreach ($badges as $badge) {
-            $data[] = [
-                'id' => $badge->getId(),
-                'name' => $badge->getName(),
-                'authorized' => $badge->isAuthorized(),
-            ];
-        }
+    #[Route('/api/badges', name: 'getBadges', methods: ['GET'])]
+    public function getBadges(BadgeRepository $badgeRepository): JsonResponse
+    {
+        // Obtenir l'EPCI à partir du token
+        $epci = $this->security->getUser();
 
-        return $this->json($data);
+        // Récupérer les badges associés à cet EPCI
+        $badges = $badgeRepository->findBy(['epci' => $epci]);
+        return $this->json($badges, 200, [], ['groups' => 'main']);
     }
 
     #[Route('/api/badges', name: 'createBadge', methods: ['POST'])]
     public function createBadge(Request $request, EntityManagerInterface $em): JsonResponse
     {
+        $epci = $this->security->getUser();
+
         $data = json_decode($request->getContent(), true);
         $name = $data['name'] ?? null;
         $authorized = $data['authorized'] ?? null;
@@ -42,6 +47,7 @@ class ApiBadgeController extends AbstractController
         $badge = new Badge();
         $badge->setName($name);
         $badge->setAuthorized((bool) $authorized);
+        $badge->setEpci($epci);
 
         $em->persist($badge);
         $em->flush();
