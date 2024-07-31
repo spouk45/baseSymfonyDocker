@@ -43,6 +43,5 @@ php bin/console doctrine:migrations:migrate
 
 # Tester l'api
 ````
-http://localhost:8080/api/badges
+http://localhost:8080/status
 ````
-
