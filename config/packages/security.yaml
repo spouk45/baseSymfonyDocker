@@ -10,11 +10,20 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        ping:
+            pattern: ^/ping$
+            security: false
+        
         api:
-            pattern: ^/accesscontrolapi
+            pattern: ^/
             stateless: true
             provider: epci_provider
             custom_authenticators:
                 - App\Security\ApiTokenAuthenticator
+                
     access_control:
-        - { path: ^/accesscontrolapi, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/ping$, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+
+
