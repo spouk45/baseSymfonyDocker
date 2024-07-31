@@ -10,19 +10,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\ApiResponseService;
 
 #[Route('/accesscontrolapi', name: 'api_')]
 class ApiBadgeController extends AbstractController
 {
     private $security;
     private $badgeRepository;
+    private $apiResponseService;
 
-
-    public function __construct(Security $security, BadgeRepository $badgeRepository)
+    public function __construct(Security $security, BadgeRepository $badgeRepository, ApiResponseService $apiResponseService)
     {
         $this->security = $security;
         $this->badgeRepository = $badgeRepository;
-
+        $this->apiResponseService = $apiResponseService;
     }
 
     #[Route('/badges', name: 'getBadges', methods: ['GET'])]
@@ -44,12 +45,20 @@ class ApiBadgeController extends AbstractController
         $authorized = $data['authorized'] ?? null;
 
         if ($name === null || $authorized === null) {
-            return $this->json(['error' => 'Invalid input'], JsonResponse::HTTP_BAD_REQUEST);
+            return $this->apiResponseService->createErrorResponse(
+                'Invalid input',
+                'The "name" and "authorized" fields are required.',
+                JsonResponse::HTTP_BAD_REQUEST
+            );
         }
 
-        $badge = $this->badgeRepository->findOneBy(['name'=> $name]);
-        if($badge != null){
-            return $this->json(['error' => 'This badge ever exist'], JsonResponse::HTTP_CONFLICT);
+        $badge = $this->badgeRepository->findOneBy(['name' => $name]);
+        if ($badge != null) {
+            return $this->apiResponseService->createErrorResponse(
+                'Conflict',
+                'This badge ever exist',
+                JsonResponse::HTTP_CONFLICT
+            );
         }
 
         $epci = $this->security->getUser();

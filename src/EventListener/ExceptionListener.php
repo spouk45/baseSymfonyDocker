@@ -11,16 +11,13 @@ class ExceptionListener
     public function onKernelException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
+        $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : JsonResponse::HTTP_INTERNAL_SERVER_ERROR;
 
         $response = new JsonResponse([
+            'status' => $statusCode,
             'error' => $exception->getMessage(),
-        ]);
-
-        if ($exception instanceof HttpExceptionInterface) {
-            $response->setStatusCode($exception->getStatusCode());
-        } else {
-            $response->setStatusCode(JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+            'message' => 'An error occurred while processing your request.'
+        ], $statusCode);
 
         $event->setResponse($response);
     }
