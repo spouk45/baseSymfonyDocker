@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/api', name: 'api_')]
+#[Route('/accesscontrolapi', name: 'api_')]
 class ApiBadgeController extends AbstractController
 {
     private $security;
