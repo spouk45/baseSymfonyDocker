@@ -67,9 +67,9 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
             : 'Authentication request could not be processed due to a system problem.';
      
         return $this->apiResponseService->createErrorResponse(
+            JsonResponse::HTTP_UNAUTHORIZED,
             'Authentication failure',
             $message,
-            JsonResponse::HTTP_UNAUTHORIZED
         );
     }
 }

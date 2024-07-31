@@ -26,7 +26,7 @@ class ApiBadgeController extends AbstractController
         $this->apiResponseService = $apiResponseService;
     }
 
-    #[Route('/badges', name: 'getBadges', methods: ['GET'])]
+    #[Route('/mybadges', name: 'getBadges', methods: ['GET'])]
     public function getBadges(): JsonResponse
     {
         // Obtenir l'EPCI à partir du token
@@ -37,7 +37,7 @@ class ApiBadgeController extends AbstractController
         return $this->json($badges, 200, [], ['groups' => 'main']);
     }
 
-    #[Route('/badges', name: 'createBadge', methods: ['POST'])]
+    #[Route('/mybadges', name: 'createBadge', methods: ['POST'])]
     public function createBadge(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -46,18 +46,20 @@ class ApiBadgeController extends AbstractController
 
         if ($name === null || $authorized === null) {
             return $this->apiResponseService->createErrorResponse(
+                JsonResponse::HTTP_BAD_REQUEST,
                 'Invalid input',
                 'The "name" and "authorized" fields are required.',
-                JsonResponse::HTTP_BAD_REQUEST
+                
             );
         }
 
         $badge = $this->badgeRepository->findOneBy(['name' => $name]);
         if ($badge != null) {
             return $this->apiResponseService->createErrorResponse(
+                JsonResponse::HTTP_CONFLICT,
                 'Conflict',
                 'This badge ever exist',
-                JsonResponse::HTTP_CONFLICT
+                
             );
         }
 
