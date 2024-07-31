@@ -47,6 +47,11 @@ class ApiBadgeController extends AbstractController
             return $this->json(['error' => 'Invalid input'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
+        $badge = $this->badgeRepository->findOneBy(['name'=> $name]);
+        if($badge != null){
+            return $this->json(['error' => 'This badge ever exist'], JsonResponse::HTTP_CONFLICT);
+        }
+
         $epci = $this->security->getUser();
         $badge = new Badge();
         $badge->setName($name);
