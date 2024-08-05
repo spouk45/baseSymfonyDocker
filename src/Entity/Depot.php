@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DepotRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
 
 #[ORM\Entity(repositoryClass: DepotRepository::class)]
 class Depot
@@ -20,7 +22,6 @@ class Depot
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['main'])]
     private ?Badge $badge = null;
 
     #[ORM\ManyToOne(targetEntity: EPCI::class, inversedBy: 'badges')]
@@ -82,5 +83,12 @@ class Depot
         $this->epci = $epci;
 
         return $this;
+    }
+
+    #[SerializedName('ref')]
+    #[Groups(['main'])]
+    public function getBadgeName(): ?string
+    {
+        return $this->badge ? $this->badge->getName() : null;
     }
 }
