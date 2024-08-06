@@ -23,7 +23,8 @@ class DepotRepository extends ServiceEntityRepository
             ->andWhere('d.timestamp BETWEEN :startDate AND :endDate')
             ->setParameter('epci', $epci)
             ->setParameter('startDate', $startDate->getTimestamp())
-            ->setParameter('endDate', $endDate->getTimestamp());
+            ->setParameter('endDate', $endDate->getTimestamp())
+            ->orderBy('d.timestamp');
 
         return $qb->getQuery()->getResult();
     }
