@@ -6,11 +6,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiResponseService
 {
-    public function createSuccessResponse(int $statusCode = JsonResponse::HTTP_OK, array $data ): JsonResponse
-    {
-        return new JsonResponse($data, $statusCode);
-    }
-
     public function createErrorResponse(int $code, ?string $message = null, ?string $detail = null): JsonResponse
     {
         $responseArray = [
