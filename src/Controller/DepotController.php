@@ -24,6 +24,16 @@ class DepotController extends AbstractController
         $this->apiResponseService = $apiResponseService;
     }
 
+    /**
+     * Retrieves depot records for the authenticated EPCI within a specified date range.
+     *
+     * This method handles POST requests to fetch depot data filtered by `startDate` and `endDate`.
+     * If `endDate` is not provided, the current date and time will be used as the default.
+     * The `startDate` and `endDate` should be in ISO 8601 format.
+     *
+     * @param Request $request The HTTP request object containing the date range parameters.
+     * @return JsonResponse The JSON response containing the filtered depot records.
+     */
     #[Route('/depots', name: 'app_depot', methods: ['POST'])]
     public function getDepots(Request $request): JsonResponse
     {
