@@ -16,28 +16,15 @@ class DepotRepository extends ServiceEntityRepository
         parent::__construct($registry, Depot::class);
     }
 
-    //    /**
-    //     * @return Depot[] Returns an array of Depot objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findDepotsByDateRange($epci, \DateTime $startDate, \DateTime $endDate)
+    {
+        $qb = $this->createQueryBuilder('d')
+            ->andWhere('d.epci = :epci')
+            ->andWhere('d.timestamp BETWEEN :startDate AND :endDate')
+            ->setParameter('epci', $epci)
+            ->setParameter('startDate', $startDate->getTimestamp())
+            ->setParameter('endDate', $endDate->getTimestamp());
 
-    //    public function findOneBySomeField($value): ?Depot
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $qb->getQuery()->getResult();
+    }
 }
