@@ -91,4 +91,15 @@ class Depot
     {
         return $this->badge ? $this->badge->getName() : null;
     }
+
+    #[SerializedName('dateTime')]
+    #[Groups(['main'])]
+    public function getIsoDate(): ?\DateTime
+    {
+        if ($this->timestamp === null) {
+            return null;
+        }
+
+        return (new \DateTime())->setTimestamp($this->timestamp);
+    }
 }
