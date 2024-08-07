@@ -3,7 +3,9 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
+use App\Entity\EPCI;
 use App\Entity\Depot;
+use App\Repository\EPCIRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -13,8 +15,18 @@ class DepotsFixtures extends Fixture implements DependentFixtureInterface
 
     public const DAYS_RANGE = 14;
 
+    private $manager;
+    private $epciRepository;
+
+    public function __construct(EPCIRepository $epciRepository)
+    {
+        $this->epciRepository = $epciRepository;
+    }
+
     public function load(ObjectManager $manager): void
     {
+        $this->manager = $manager;
+
         $faker = Factory::create();
 
         // On part sur une moyenne de max 4 dépots par jours et par badges
@@ -32,6 +44,9 @@ class DepotsFixtures extends Fixture implements DependentFixtureInterface
             }
         }
 
+        // Ajout de donnée en lien avec S.Monitor
+        $this->addDatas();
+
         $manager->flush();
     }
 
@@ -39,6 +54,37 @@ class DepotsFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             BadgesFixtures::class,
+            EpcisFixtures::class,
         ];
+    }
+
+    /**
+     * Ajout de données fixe pour test liés avec S.Monitor
+     */
+    private function addDatas()
+    {
+        $faker = Factory::create();
+        $smd3 = $this->getEpciByName('SMD3');
+        $quantity = 3 * rand(1, 4 * $this::DAYS_RANGE);
+
+        for ($i = 0; $i < $quantity; $i++) {
+            $depot = new Depot();
+            $depot->setAccessControlUid("SIG_CATEST" . rand(1, 3));
+            $depot->setBadge($this->getReference(BadgesFixtures::BADGE_REFERENCE . rand(0, BadgesFixtures::BADGE_QUANTITY - 1)));
+            $depot->setEpci($smd3);
+            $dateTime = $faker->dateTimeBetween('-' . self::DAYS_RANGE . ' days', 'now');
+            $depot->setTimestamp($dateTime->getTimestamp());
+            $this->manager->persist($depot);
+        }
+    }
+
+    private function getEpciByName(string $name): ?EPCI
+    {
+        $epci = $this->epciRepository->findOneByName('SMD3');
+        if ($epci) {
+            return $epci;
+        }
+
+        throw new \Exception("EPCI with name $name not found.");
     }
 }

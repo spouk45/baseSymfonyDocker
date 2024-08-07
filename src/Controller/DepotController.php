@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Utils\DateTimeUtils;
+use Psr\Log\LoggerInterface;
 use App\Repository\DepotRepository;
 use App\Service\ApiResponseService;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,12 +18,14 @@ class DepotController extends AbstractController
     private $security;
     private $depotRepository;
     private $apiResponseService;
+    private $logger;
 
-    public function __construct(Security $security, DepotRepository $depotRepository, ApiResponseService $apiResponseService)
+    public function __construct(Security $security, DepotRepository $depotRepository, ApiResponseService $apiResponseService, LoggerInterface $logger)
     {
         $this->security = $security;
         $this->depotRepository = $depotRepository;
         $this->apiResponseService = $apiResponseService;
+        $this->logger = $logger;
     }
 
     /**
@@ -40,6 +43,13 @@ class DepotController extends AbstractController
     {
         $epci = $this->security->getUser();
 
+        // Log the request details
+        $this->logger->info('Received request for getDepots', [
+            'time' => date('Y-m-d H:i:s'),
+            'ip' => $request->getClientIp(),
+            'data' => $request->getContent()
+        ]);
+
         $data = json_decode($request->getContent(), true);
         $startDateInput = $data['startDate'] ?? null;
         $endDateInput = $data['endDate'] ?? null;
@@ -56,6 +66,13 @@ class DepotController extends AbstractController
 
         // Récupérer les depots dans l'intervalle de dates
         $depots = $this->depotRepository->findDepotsByDateRange($epci, $startDate, $endDate);
+        
+        // Log the response details
+        $this->logger->info('Sending response for getDepots', [
+            'time' => date('Y-m-d H:i:s'),
+            'count' => count($depots)
+        ]);
+
         return $this->json($depots, 200, [], ['groups' => 'main']);
     }
 }
