@@ -35,7 +35,7 @@ class DepotsFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < count(EpcisFixtures::EPCIS); $i++) {
             for ($j = 0; $j < $quantity; $j++) {
                 $depot = new Depot();
-                $depot->setAccessControlUid(substr($faker->uuid, 0, 10));
+                $depot->setAccessControlUid($faker->regexify('[A-Z0-9]{13}'));
                 $depot->setBadge($this->getReference(BadgesFixtures::BADGE_REFERENCE . rand(0, BadgesFixtures::BADGE_QUANTITY - 1)));
                 $depot->setEpci($this->getReference(EpcisFixtures::EPCI_REFERENCE . $i));
                 $dateTime = $faker->dateTimeBetween('-' . self::DAYS_RANGE . ' days', 'now');
