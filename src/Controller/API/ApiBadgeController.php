@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\API;
 
 use App\Entity\Badge;
 use App\Repository\BadgeRepository;
@@ -49,7 +49,7 @@ class ApiBadgeController extends AbstractController
                 JsonResponse::HTTP_BAD_REQUEST,
                 'Invalid input',
                 'The "name" and "authorized" fields are required.',
-                
+
             );
         }
 
@@ -59,7 +59,7 @@ class ApiBadgeController extends AbstractController
                 JsonResponse::HTTP_CONFLICT,
                 'Conflict',
                 'This badge ever exist',
-                
+
             );
         }
 
@@ -73,5 +73,14 @@ class ApiBadgeController extends AbstractController
         $em->flush();
 
         return $this->json(['message' => 'Badge created successfully'], JsonResponse::HTTP_CREATED);
+    }
+
+    #[Route('/mybadges/count', name: 'getCount', methods: ['GET'])]
+    public function getBadgesCount(): JsonResponse
+    {
+        $epci = $this->security->getUser();
+
+        $badgeCount  = $this->badgeRepository->count(['epci' => $epci]);
+        return $this->json(['badge_count' => $badgeCount]);
     }
 }
