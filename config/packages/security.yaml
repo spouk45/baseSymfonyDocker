@@ -16,14 +16,14 @@ security:
             security: false
         
         api:
-            pattern: ^/
+            pattern: ^/accesscontrolapi
             stateless: true
             provider: epci_provider
             custom_authenticators:
                 - App\Security\ApiTokenAuthenticator
                 
     access_control:
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/accesscontrolapi, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/ping$, roles: IS_AUTHENTICATED_ANONYMOUSLY}
 
 
