@@ -13,9 +13,9 @@ Ce projet est un exemple d'application Symfony utilisant Docker pour gérer les 
 # Prérequis
 
 - Docker
-- Docker Compose
-- composer (Pour la gestion des package php)
-- npm (pour la gestion des packages javascript)
+- ~~Docker Compose~~
+- ~~composer (Pour la gestion des package php)~~
+- ~~npm (pour la gestion des packages javascript)~~
 
 ## Installation des prérequis
 TODO : to test, (pas certain que se soit nécessaire comme le projet est déjà initialisé sur docker)
@@ -52,30 +52,13 @@ Copiez le fichier ``.env.dist`` en ``.env`` et modifiez les variables d'environn
 ````bash
 docker-compose up --build
 ````
+Un dossier ``var`` et ``vendor`` devrait apparaitre à la racine du dossier.  
+
 La suite des commandes est à éxécuter dans le conteneur php. Pour se faire:
 ````bash
 docker-compose exec php bash
 ````
-## Installer les dépendances PHP
-
-````bash
-composer install
-````
-
-# En cas d'erreur
-si lors du build:
-> failed to solve: process "/bin/sh -c chown -R www-data:www-data /var/www/var" did not complete successfully: exit code: 1
-
-le dossier ``var`` n'existerait pas, il faut lancer:
-````
-compose install
-docker-compose up --build
-`````
-
-NOTE: il y a surement des points d'amélioration à faire sur le dockerFile
-
-
-## Exécuter les migrations de la base de données
+## Exécuter les migrations de la base de données si nécessaire
 ````
 php bin/console doctrine:database:create
 php bin/console make:migration
@@ -85,4 +68,9 @@ php bin/console doctrine:migrations:migrate
 # Tester l'api
 ````
 http://localhost:8080/status
+````
+
+Application des fixtures si besoin pour alimenter la base en données de test:
+````bash
+php bin/console d:f:l
 ````

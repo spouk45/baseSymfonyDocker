@@ -12,5 +12,14 @@
 
 ###> nodeJs ###
 /node_modules/
+/public/build/
 ###< nodeJs ###
 
+# Webpack
+*.log
+*.lock
+*.cache
+*.tmp
+
+# Docker
+docker-compose.override.yml

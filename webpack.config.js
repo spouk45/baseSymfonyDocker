@@ -1,21 +1,43 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: './assets/js/app.js', // Point d'entrée principal de ton application
-  output: {
-    filename: 'bundle.js', // Nom du fichier de sortie
-    path: path.resolve(__dirname, 'public/build'), // Répertoire de sortie
-  },
-  module: {
-    rules: [
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader', // Injecte les styles dans le DOM
-          'css-loader', // Interprète les @import et les URL() comme des require()/import()
-          'sass-loader', // Compile le SCSS en CSS
+    mode: 'development', // ou 'production' selon vos besoins
+    entry: './assets/js/app.js',
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'public/build'),
+    },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                ],
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader',
+                ],
+            },
         ],
-      },
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'styles.css',
+        }),
     ],
-  },
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'public'),
+        },
+        compress: true,
+        port: 8080,
+        host: '0.0.0.0',
+    },
 };

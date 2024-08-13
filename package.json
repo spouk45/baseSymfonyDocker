@@ -4,12 +4,22 @@
   "description": "for front symfony",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "start": "webpack serve --open"
   },
   "author": "Yoan",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.3.3",
     "sass": "^1.77.8"
+  },
+  "devDependencies": {
+    "css-loader": "^6.5.1",
+    "mini-css-extract-plugin": "^2.4.5",
+    "sass-loader": "^12.3.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^5.0.4"
   }
 }
