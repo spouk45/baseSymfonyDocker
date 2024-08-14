@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/badge')]
 class BadgeController extends AbstractController
 {
-    #[Route('/', name: 'app_badge_index', methods: ['GET'])]
+    #[Route('/', name: 'badge_index', methods: ['GET'])]
     public function index(BadgeRepository $badgeRepository): Response
     {
         return $this->render('badge/index.html.twig', [
