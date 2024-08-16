@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/accesscontrolapi', name: 'api_')]
-class DepotController extends AbstractController
+class ApiDepotController extends AbstractController
 {
     private $security;
     private $depotRepository;
