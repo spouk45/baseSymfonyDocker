@@ -17,16 +17,16 @@ Ce projet est un exemple d'application Symfony utilisant Docker pour gérer les 
 - ~~composer (Pour la gestion des package php)~~
 - ~~npm (pour la gestion des packages javascript)~~
 
-## Installation des prérequis
+## Installation des prérequis (normalement plus besoin, à confirme)
 TODO : to test, (pas certain que se soit nécessaire comme le projet est déjà initialisé sur docker)
 
-### Installer Composer 
+### Installer Composer (normalement plus besoin, à confirme)
 TODO
 ````
 composer install
 ````
 
-### Installer NPM
+### Installer NPM (normalement plus besoin, à confirme)
 Téléchargez et installez Node.js (qui inclut npm) : https://nodejs.org/fr  
 
 Rendez-vous sur le site officiel de Node.js et téléchargez la version LTS recommandée.  
@@ -67,7 +67,7 @@ php bin/console doctrine:migrations:migrate
 
 # Tester l'api
 ````
-http://localhost:8080/status
+http://localhost:8082/ping
 ````
 
 Application des fixtures si besoin pour alimenter la base en données de test:

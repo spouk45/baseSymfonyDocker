@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\AccessControl;
 use App\Entity\EPCI;
 use App\Entity\Badge;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
             MenuItem::linkToCrud('Badges', 'fa fa-tags', Badge::class),
             MenuItem::linkToCrud('EPCI', 'fa fa-building', EPCI::class),
+            MenuItem::linkToCrud('AccessControl', 'fa fa-building', AccessControl::class),
             // Ajoutez d'autres éléments de menu ici...
         ];
     }
