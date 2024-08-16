@@ -65,4 +65,9 @@ class EPCI implements UserInterface
         return $this->name; // ou tout autre identifiant unique
     }
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
 }
