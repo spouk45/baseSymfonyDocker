@@ -65,7 +65,7 @@ class DepotsFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create();
         $smd3 = $this->getEpciByName('SMD3');
-        $quantity = 3 * rand(1, 4 * $this::DAYS_RANGE);
+        $quantity = 10 * rand(2, 4 * $this::DAYS_RANGE);
 
         for ($i = 0; $i < $quantity; $i++) {
             $depot = new Depot();
