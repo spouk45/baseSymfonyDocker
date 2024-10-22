@@ -66,13 +66,14 @@ class ApiDepotController extends AbstractController
 
         // Récupérer les depots dans l'intervalle de dates
         $depots = $this->depotRepository->findDepotsByDateRange($epci, $startDate, $endDate);
-        
+
         // Log the response details
         $this->logger->info('Sending response for getDepots', [
             'time' => date('Y-m-d H:i:s'),
             'count' => count($depots)
         ]);
 
-        return $this->json($depots, 200, [], ['groups' => 'main']);
+        $jsonResponse = $this->json($depots, 200, [], ['groups' => 'main']);
+        return $this->apiResponseService->compressResponseOrNot($request, $jsonResponse);
     }
 }
